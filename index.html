@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> 
+        <title>Sorting Test</title>
+        <script>
+                    let counter = 1; //userid start with 1
+                    let data = []; //create the storage to store the input 
+                    function AddRow(){ //funtion to add new row or input
+                    var button = document.getElementById('button');
+                            button.addEventListener('click', SaveInput, false);
+                            let sortby = document.getElementById('sortby');
+                            sortby.addEventListener('change', SortId, false);
+                            document.getElementById('userid').value = counter;
+                    }
+
+            function SortId(){ //function to sort by userid
+            console.log("Sorting", document.getElementById('sortby').value);
+                    let sortby = document.getElementById('sortby').value;
+                    if (sortby === "userid"){
+            data.sort(function (row1, row2) {
+            return row1.id - row2.id; }
+            );
+            }
+            else{
+            sortByNameOrOccupation(sortby);
+            }
+            console.log(data);
+                    displayOutput();
+            }
+
+            function SaveInput(){ //funtion to save the input 
+            let name = document.getElementById('username');
+                    let occupation = document.getElementById('useroccupation');
+                    data.push({id: counter, name: name.value, occupation: occupation.value });
+                    console.log(data);
+                    counter++;
+                    document.getElementById('userid').value = counter;
+                    name.value = '';
+                    occupation.value = '';
+                    let outputSection = document.getElementById('output');
+                    let outputData = data[data.length - 1];
+                    let newP = document.createElement('p');
+                    newP.textContent = outputData['id'] + " " + outputData['name'] + "  " + outputData['occupation'];
+                    outputSection.appendChild(newP);
+            }
+
+            function sortByNameOrOccupation(attribute){ //function to sort by username and useroccupation
+            data.sort(function(row1, row2) {
+            var name1 = row1[attribute].toUpperCase(); 
+                    var name2 = row2[attribute].toUpperCase(); 
+                    if (name1 < name2) {
+            return - 1;
+            }
+            if (name1 > name2) {
+            return 1; }
+            return 0; }
+            );
+            }
+
+            function displayOutput(){ //display the input
+            let outputSection = document.getElementById('output');
+                    outputSection.innerHTML = '';
+                    let fragment = document.createDocumentFragment();
+                    data.forEach(function(display) {
+                    let p = document.createElement('p');
+                            p.textContent = display['id'] + " " + display['name'] + "  " + display['occupation'];
+                            fragment.appendChild(p);
+                    }
+                    );
+                    outputSection.appendChild(fragment);
+            }
+            window.addEventListener('load', AddRow, false);
+        </script>
+    </head>
+    <body>
+        <div id="mainlayout" align="center">
+            <div id="container" style="width: 800px">
+                <div id="header"><h2>SORTING TEST</h2></div>
+                <div id="content"><br>
+                    <section id="input"> <!--input the data -->
+                        <form >
+                            ID : <input type="number" name="id" readonly id="userid">
+                            Name : <input type="text" name="name" id="username" >
+                            Occupation : <input type="text" name="occupation" id="useroccupation">
+                            <input type="button" id="button" value="Add">
+                        </form>
+                    </section>
+                    <br>
+                    <br>
+                    Sort by: <select name="sort" id ="sortby">
+                        <option value ="userID">userID</option>
+                        <option value ="name">userName</option>
+                        <option value ="occupation">userOccupation</option>
+                    </select>
+                    <br><br><br>       
+                    <section id="output"></section> <!--display the input before and after sorting -->
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
